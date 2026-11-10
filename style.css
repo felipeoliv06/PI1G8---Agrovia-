@@ -1,0 +1,37 @@
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+width: 6px;
+height: 6px;
+}
+
+::-webkit-scrollbar-track {
+background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+background: #1e293b;
+border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: #334155;
+}
+
+/* Utilitários e Animações de Transição */
+.welcome-step {
+transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.view-section {
+display: none;
+}
+
+.view-section.active {
+display: block;
+}
+
+.glass-card {
+background: rgba(15, 23, 42, 0.75);
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.07);
+}

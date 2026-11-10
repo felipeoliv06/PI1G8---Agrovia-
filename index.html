@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-950">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agrovia - Gestão Agrícola</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="h-full text-slate-100 font-sans antialiased overflow-x-hidden select-none">
+
+  <!-- ========================================== -->
+  <!-- TELA DE BOAS-VINDAS / TRANSIÇÃO          -->
+  <!-- ========================================== -->
+  <div id="welcomeScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950 transition-opacity duration-1000 cursor-pointer">
+    
+    <div class="welcome-content text-center px-4 transition-all duration-700 transform">
+      
+      <!-- Passo 1: Agrovia com símbolo de plantinha -->
+      <div id="stepBrand" class="welcome-step text-center">
+        <div class="inline-flex items-center justify-center p-4 bg-emerald-500/10 rounded-full mb-6 border border-emerald-500/20 shadow-lg shadow-emerald-500/10 animate-bounce">
+          <i class="fa-solid fa-seedling text-5xl sm:text-6xl text-emerald-400"></i>
+        </div>
+        <h1 class="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-green-500">
+          Agrovia
+        </h1>
+        <p class="text-slate-400 mt-4 text-lg sm:text-2xl font-light tracking-wide">Inovação e Gestão no Campo</p>
+      </div>
+
+      <!-- Passo 2: Seja bem-vindo!! -->
+      <div id="stepWelcome" class="welcome-step hidden text-center">
+        <div class="inline-flex items-center justify-center p-3 bg-emerald-500/10 rounded-full mb-6 border border-emerald-500/20">
+          <i class="fa-solid fa-leaf text-4xl sm:text-5xl text-emerald-400"></i>
+        </div>
+        <h1 class="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight text-white">
+          Seja bem-vindo!!
+        </h1>
+      </div>
+
+      <!-- Passo 3: Olá produtor -->
+      <div id="stepProducer" class="welcome-step hidden text-center">
+        <div class="inline-flex items-center justify-center p-3 bg-emerald-500/10 rounded-full mb-6 border border-emerald-500/20">
+          <i class="fa-solid fa-wheat-awn text-4xl sm:text-5xl text-emerald-400"></i>
+        </div>
+        <h1 class="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight text-emerald-400">
+          Olá produtor
+        </h1>
+      </div>
+
+      <!-- Instrução para continuar -->
+      <div id="interactionHint" class="mt-16 opacity-0 transition-opacity duration-1000 flex flex-col items-center gap-2">
+        <span class="text-slate-400 text-xs sm:text-sm font-medium tracking-widest uppercase animate-pulse">
+          Mova o mouse ou toque para acessar
+        </span>
+        <i class="fa-solid fa-chevron-down text-emerald-400 animate-bounce mt-2"></i>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- TELA DE AUTENTICAÇÃO E CRIAÇÃO DE PERFIL   -->
+  <!-- ========================================== -->
+  <div id="loginScreen" class="fixed inset-0 z-40 flex items-center justify-center bg-slate-950 px-4 py-6 transition-all duration-1000 opacity-0 pointer-events-none transform scale-95 overflow-y-auto">
+    
+    <div class="w-full max-w-md bg-slate-900/90 backdrop-blur-xl p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden my-auto">
+      
+      <!-- Efeito de brilho de fundo -->
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl"></div>
+      
+      <div class="text-center mb-6 relative z-10">
+        <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl mb-3 text-emerald-400 text-2xl shadow-lg">
+          <i class="fa-solid fa-seedling"></i>
+        </div>
+        <h2 id="formTitle" class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Criar Perfil Agrovia</h2>
+        <p id="formSubtitle" class="text-slate-400 text-xs sm:text-sm mt-1">Preencha seus dados para configurar sua fazenda</p>
+      </div>
+
+      <!-- Alerta de erro -->
+      <div id="loginError" class="hidden mb-6 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs text-center">
+        Por favor, preencha todos os campos obrigatórios corretamente!
+      </div>
+
+      <form id="loginForm" class="space-y-4 relative z-10">
+        
+        <!-- Campo OBRIGATÓRIO: Nome do Produtor -->
+        <div id="fieldNameContainer">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            Nome Completo do Produtor <span class="text-emerald-400">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i class="fa-regular fa-user"></i>
+            </span>
+            <input type="text" id="loginName" required placeholder="Ex: João da Silva" class="w-full pl-10 pr-4 py-3 bg-slate-800/60 border border-slate-700/60 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-sm">
+          </div>
+        </div>
+
+        <!-- Campo OBRIGATÓRIO: Nome da Fazenda -->
+        <div id="fieldFarmContainer">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            Nome da Fazenda / Propriedade <span class="text-emerald-400">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i class="fa-solid fa-wheat-field"></i>
+            </span>
+            <input type="text" id="loginFarm" required placeholder="Ex: Fazenda Boa Vista" class="w-full pl-10 pr-4 py-3 bg-slate-800/60 border border-slate-700/60 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-sm">
+          </div>
+        </div>
+
+        <!-- Campo OBRIGATÓRIO: E-mail -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            E-mail <span class="text-emerald-400">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i class="fa-regular fa-envelope"></i>
+            </span>
+            <input type="email" id="loginEmail" required value="produtor@fazenda.com" class="w-full pl-10 pr-4 py-3 bg-slate-800/60 border border-slate-700/60 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-sm" placeholder="seu@email.com">
+          </div>
+        </div>
+
+        <!-- Campo OBRIGATÓRIO: Senha -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            Senha <span class="text-emerald-400">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i class="fa-solid fa-lock"></i>
+            </span>
+            <input type="password" id="loginPassword" required value="123456" class="w-full pl-10 pr-10 py-3 bg-slate-800/60 border border-slate-700/60 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-sm" placeholder="••••••••">
+            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full py-3.5 px-4 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 mt-2">
+          Criar Perfil e Acessar
+        </button>
+      </form>
+
+      <!-- Alternador de Modos (Cadastro vs Login) -->
+      <div class="mt-5 pt-5 border-t border-slate-800/80 text-center relative z-10 flex flex-col gap-2">
+        <button id="toggleModeBtn" class="text-xs text-slate-400 hover:text-emerald-400 transition-colors">
+          Já tem um perfil? <span class="text-emerald-400 font-semibold underline">Fazer Login</span>
+        </button>
+        <button id="demoLoginBtn" class="text-xs text-slate-500 hover:text-slate-300 transition-colors flex items-center justify-center gap-1.5 mt-1">
+          <i class="fa-solid fa-bolt text-emerald-400"></i> Acessar com Perfil Demonstrativo
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- DASHBOARD PRINCIPAL (AGROVIA)              -->
+  <!-- ========================================== -->
+  <div id="dashboardApp" class="hidden min-h-screen bg-slate-950 flex flex-col lg:flex-row relative">
+    
+    <!-- Fundo escuro overlay para mobile/tablet quando o menu está aberto -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-30 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
+
+    <!-- Sidebar / Menu Lateral -->
+    <aside id="sidebar" class="fixed top-0 bottom-0 left-0 z-40 w-72 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-4 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:static lg:w-64">
+      <div>
+        <!-- Cabeçalho do Menu -->
+        <div class="flex items-center justify-between px-2 py-3 mb-6 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
+              <i class="fa-solid fa-seedling text-xl"></i>
+            </div>
+            <div>
+              <h1 class="font-bold text-lg text-white leading-tight tracking-wide">Agrovia</h1>
+              <span class="text-xs text-slate-400">Gestão Agrícola</span>
+            </div>
+          </div>
+          <!-- Botão Fechar Menu (Mobile/Tablet) -->
+          <button id="closeSidebarBtn" class="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Links de Navegação -->
+        <nav class="space-y-1.5">
+          <a href="#" class="flex items-center gap-3 px-3.5 py-3 bg-emerald-500/10 text-emerald-400 font-semibold rounded-xl border border-emerald-500/20">
+            <i class="fa-solid fa-chart-pie w-5 text-center"></i> Visão Geral
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3.5 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium rounded-xl transition-all">
+            <i class="fa-solid fa-wheat-awn w-5 text-center"></i> Lotes & Safras
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3.5 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium rounded-xl transition-all">
+            <i class="fa-solid fa-wallet w-5 text-center"></i> Financeiro
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3.5 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium rounded-xl transition-all">
+            <i class="fa-solid fa-tractor w-5 text-center"></i> Maquinário
+          </a>
+          <a href="#" class="flex items-center gap-3 px-3.5 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 font-medium rounded-xl transition-all">
+            <i class="fa-solid fa-cloud-sun-rain w-5 text-center"></i> Clima & Solo
+          </a>
+        </nav>
+      </div>
+
+      <!-- Rodapé do Menu com Perfil Dinâmico -->
+      <div class="border-t border-slate-800 pt-4">
+        <div class="flex items-center gap-3 px-2 py-2 mb-2">
+          <div id="userInitialsDisplay" class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold shrink-0">
+            P
+          </div>
+          <div class="overflow-hidden">
+            <h4 id="userNameDisplay" class="text-sm font-semibold text-white truncate">Produtor</h4>
+            <p id="userFarmDisplay" class="text-xs text-slate-400 truncate">Fazenda Ouro Verde</p>
+          </div>
+        </div>
+        <button id="logoutBtn" class="w-full py-2.5 px-3 bg-slate-800/80 hover:bg-slate-800 text-slate-300 text-xs font-medium rounded-xl flex items-center justify-center gap-2 transition-colors">
+          <i class="fa-solid fa-right-from-bracket"></i> Sair da Conta
+        </button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+      
+      <!-- Header Superior com Saudação Personalizada -->
+      <header class="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <div class="flex items-center gap-3">
+          <!-- Botão 3 Riscos (Hambúrguer) para Mobile/Tablet -->
+          <button id="toggleSidebarBtn" class="lg:hidden p-2.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 hover:text-white hover:bg-slate-800 transition-colors">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+          
+          <div>
+            <h2 id="welcomeGreeting" class="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2">
+              Olá, Produtor <i class="fa-solid fa-seedling text-emerald-400 text-lg sm:text-xl"></i>
+            </h2>
+            <p class="text-slate-400 text-xs sm:text-sm mt-0.5">Acompanhe os dados da sua propriedade em tempo real</p>
+          </div>
+        </div>
+
+        <!-- Card de Clima -->
+        <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-2xl p-2.5 px-4 shadow-lg w-full sm:w-auto justify-between sm:justify-start">
+          <div class="text-amber-400 text-2xl">
+            <i class="fa-solid fa-sun"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400">Taquaritinga, SP</div>
+            <div class="text-sm font-bold text-white">28°C <span class="text-slate-400 font-normal text-xs">| Umidade: 62%</span></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Métricas / KPIs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Área Plantada</span>
+            <span class="p-2 bg-emerald-500/10 text-emerald-400 rounded-xl text-xs"><i class="fa-solid fa-vector-square"></i></span>
+          </div>
+          <div class="text-2xl font-bold text-white mb-1">1.250 ha</div>
+          <span class="text-xs text-emerald-400 font-medium flex items-center gap-1">
+            <i class="fa-solid fa-arrow-up"></i> +12% em relação à safra anterior
+          </span>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Estimativa de Colheita</span>
+            <span class="p-2 bg-amber-500/10 text-amber-400 rounded-xl text-xs"><i class="fa-solid fa-wheat-awn"></i></span>
+          </div>
+          <div class="text-2xl font-bold text-white mb-1">4.800 Ton</div>
+          <span class="text-xs text-slate-400">Meta: 5.000 Ton (96%)</span>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Custo de Operação</span>
+            <span class="p-2 bg-sky-500/10 text-sky-400 rounded-xl text-xs"><i class="fa-solid fa-dollar-sign"></i></span>
+          </div>
+          <div class="text-2xl font-bold text-white mb-1">R$ 840,00 <span class="text-xs text-slate-400 font-normal">/ha</span></div>
+          <span class="text-xs text-emerald-400 font-medium flex items-center gap-1">
+            <i class="fa-solid fa-arrow-down"></i> -5% dentro do orçamento
+          </span>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 relative overflow-hidden">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Status das Máquinas</span>
+            <span class="p-2 bg-purple-500/10 text-purple-400 rounded-xl text-xs"><i class="fa-solid fa-tractor"></i></span>
+          </div>
+          <div class="text-2xl font-bold text-white mb-1">8 / 10</div>
+          <span class="text-xs text-amber-400 font-medium">2 tratores em manutenção</span>
+        </div>
+
+      </div>
+
+      <!-- Gráficos -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        
+        <div class="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h3 class="font-bold text-white text-base sm:text-lg">Histórico de Produção & Metas</h3>
+              <p class="text-xs text-slate-400">Comparativo de toneladas por mês</p>
+            </div>
+            <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full font-medium">2026</span>
+          </div>
+          <div class="h-64 sm:h-72">
+            <canvas id="productionChart"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h3 class="font-bold text-white text-base sm:text-lg">Distribuição de Custos</h3>
+              <p class="text-xs text-slate-400">Detalhamento dos insumos</p>
+            </div>
+          </div>
+          <div class="h-64 sm:h-72 flex items-center justify-center">
+            <canvas id="costsChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tabela de Lotes -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 mb-12 lg:mb-0">
+        <h3 class="font-bold text-white text-base sm:text-lg mb-4">Acompanhamento dos Lotes</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300 min-w-[500px]">
+            <thead class="text-xs uppercase bg-slate-800/50 text-slate-400 font-semibold">
+              <tr>
+                <th class="p-3 rounded-l-xl">Lote</th>
+                <th class="p-3">Cultura</th>
+                <th class="p-3">Área (ha)</th>
+                <th class="p-3">Fase Atual</th>
+                <th class="p-3 rounded-r-xl">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <tr>
+                <td class="p-3 font-semibold text-white">Lote A-1</td>
+                <td class="p-3"><span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-seedling text-emerald-400"></i> Soja</span></td>
+                <td class="p-3">450 ha</td>
+                <td class="p-3">Desenvolvimento Vegetativo</td>
+                <td class="p-3"><span class="px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">Saudável</span></td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-white">Lote B-3</td>
+                <td class="p-3"><span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-wheat-awn text-amber-400"></i> Milho</span></td>
+                <td class="p-3">300 ha</td>
+                <td class="p-3">Floração</td>
+                <td class="p-3"><span class="px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">Saudável</span></td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-white">Lote C-2</td>
+                <td class="p-3"><span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-leaf text-amber-600"></i> Café</span></td>
+                <td class="p-3">500 ha</td>
+                <td class="p-3">Maturação</td>
+                <td class="p-3"><span class="px-2.5 py-1 text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20">Atenção Irrigação</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Lógica da Aplicação -->
+  <script src="script.js"></script>
+</body>
+</html>
