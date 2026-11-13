@@ -1,47 +1,30 @@
 # Agrovia — Gestão Agrícola
 
-Projeto de interface web para acompanhamento e gestão de uma propriedade agrícola.
+Esta atualização sincroniza o repositório com a versão modular Fase 3.1 revisada e conecta o frontend ao projeto Supabase ativo.
 
-## Tecnologias
+## O que está incluído
+- Autenticação Supabase: cadastro, login, logout e recuperação de senha.
+- Cadastro, listagem e exclusão de propriedades.
+- Módulos JavaScript separados por responsabilidade.
+- Banco PostgreSQL com perfis, propriedades, culturas, talhões e safras.
+- RLS por usuário e validações de integridade entre safras, talhões e culturas.
+- Correções de inicialização da sessão, validação de área e tratamento de erros.
 
-- HTML5
-- CSS3
-- JavaScript
-- Tailwind CSS (carregado por CDN)
-- Chart.js (carregado por CDN)
-- Font Awesome (carregado por CDN)
+## Executar localmente
+1. Instale Node.js.
+2. Confira `js/config/env.js`. Ele usa somente a URL e a chave **publishable** do Supabase. Nunca coloque `service_role` ou `sb_secret` no navegador.
+3. Execute `npx serve .` na raiz do projeto.
+4. Abra o endereço local informado pelo servidor.
 
-## Como executar
+Não abra o arquivo com `file://`, pois a aplicação usa módulos ES.
 
-1. Baixe ou clone este repositório.
-2. Abra o arquivo `index.html` em um navegador.
-3. Para uma experiência melhor durante o desenvolvimento, use a extensão Live Server no Visual Studio Code.
+## Verificações
+`npm run check` verifica a sintaxe dos módulos JavaScript.
 
-É necessário ter conexão com a internet para carregar as bibliotecas externas usadas por CDN.
+Os fluxos de cadastro/login e CRUD precisam de teste manual em navegador com uma conta de teste. O banco remoto foi verificado separadamente: cinco tabelas com RLS ativo, 18 políticas e sete triggers.
 
-## Estado atual
+## Escopo atual
+O frontend implementa autenticação e propriedades. As telas de culturas, talhões e safras ainda serão desenvolvidas; as tabelas e regras de segurança já existem no Supabase.
 
-Esta versão é um protótipo de interface. O painel contém dados demonstrativos e o acesso/cadastro ainda não usa autenticação real nem banco de dados. Os dados exibidos não representam informações reais de uma fazenda.
-
-## Estrutura
-
-```text
-agrovia/
-├── index.html
-├── style.css
-├── script.js
-├── README.md
-└── .gitignore
-```
-
-## Próximas etapas
-
-- Implementar autenticação segura.
-- Integrar um banco de dados.
-- Criar operações de cadastro, edição e exclusão para safras, lotes, despesas e máquinas.
-- Integrar dados meteorológicos reais.
-- Criar relatórios com dados cadastrados.
-
-## Observação
-
-Não coloque senhas, chaves de API ou dados pessoais no repositório. Quando serviços externos forem integrados, suas credenciais devem ficar em variáveis de ambiente no servidor, nunca expostas no JavaScript do navegador.
+## Segurança
+A chave publishable é própria para frontend e deve permanecer protegida por RLS. Nunca exponha chaves secretas ou service role.

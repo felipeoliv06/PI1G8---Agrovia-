@@ -1,0 +1,34 @@
+name: Expand Agrovia source package
+
+on:
+  push:
+    branches:
+      - chatgpt/sync-fase3-1-supabase
+    paths:
+      - "agrovia_banco_completo_v1_4.zip"
+
+permissions:
+  contents: write
+
+jobs:
+  expand-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout synchronization branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/sync-fase3-1-supabase
+          fetch-depth: 0
+      - name: Expand reviewed Agrovia package
+        run: |
+          unzip -oq agrovia_banco_completo_v1_4.zip -d .
+          rm -f agrovia_banco_completo_v1_4.zip script.js style.css
+      - name: Commit synchronized source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: sincroniza fonte Agrovia v1.4"
+            git push origin chatgpt/sync-fase3-1-supabase
+          fi
